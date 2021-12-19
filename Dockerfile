@@ -4,12 +4,11 @@ RUN npm install -g http-server
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+RUN npm run build
 COPY . .
+
+# build app for production with minification
 RUN npm run build
 
-#production stage
-FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-
-EXPOSE 8080
-CMD [ "nginx","http-server", "dist", "-g"]
+EXPOSE 80
+CMD [ "http-server", "dist" ]
